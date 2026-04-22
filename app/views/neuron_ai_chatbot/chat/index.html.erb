@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Neuron AI Chatbot</title>
+  <%= csrf_meta_tags %>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap');
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(135deg, #0f172a, #1e293b);
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0;
+      padding: 0;
+      color: #f8fafc;
+      overflow: hidden;
+    }
+
+    .chat-container {
+      width: 100%;
+      max-width: 900px;
+      height: 90vh;
+      background: rgba(255, 255, 255, 0.03);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 24px;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .chat-header {
+      padding: 24px 32px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      display: flex;
+      align-items: center;
+      background: rgba(0, 0, 0, 0.2);
+    }
+
+    .chat-header h1 {
+      margin: 0;
+      font-size: 1.35rem;
+      font-weight: 600;
+      background: linear-gradient(to right, #38bdf8, #818cf8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      letter-spacing: -0.02em;
+    }
+
+    .chat-messages {
+      flex: 1;
+      padding: 32px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+      scroll-behavior: smooth;
+    }
+
+    .chat-messages::-webkit-scrollbar {
+      width: 6px;
+    }
+    .chat-messages::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+    }
+
+    .message {
+      max-width: 80%;
+      padding: 16px 20px;
+      border-radius: 20px;
+      font-size: 0.95rem;
+      line-height: 1.6;
+      animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      opacity: 0;
+      transform: translateY(10px);
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    }
+
+    @keyframes fadeIn {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .message.user {
+      align-self: flex-end;
+      background: linear-gradient(135deg, #3b82f6, #6366f1);
+      color: white;
+      border-bottom-right-radius: 4px;
+    }
+
+    .message.ai {
+      align-self: flex-start;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      color: #e2e8f0;
+      border-bottom-left-radius: 4px;
+    }
+
+    .chat-input-container {
+      padding: 20px 32px;
+      background: rgba(0, 0, 0, 0.2);
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+      display: flex;
+      gap: 16px;
+    }
+
+    .chat-input {
+      flex: 1;
+      background: rgba(0, 0, 0, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 16px;
+      padding: 16px 24px;
+      color: white;
+      font-size: 1rem;
+      outline: none;
+      transition: all 0.3s ease;
+      font-family: inherit;
+    }
+
+    .chat-input:focus {
+      border-color: #38bdf8;
+      background: rgba(0, 0, 0, 0.3);
+      box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.15);
+    }
+
+    .send-btn {
+      background: linear-gradient(135deg, #3b82f6, #6366f1);
+      border: none;
+      border-radius: 16px;
+      width: 54px;
+      height: 54px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      color: white;
+    }
+
+    .send-btn:hover {
+      transform: translateY(-2px) scale(1.05);
+      box-shadow: 0 10px 20px -5px rgba(99, 102, 241, 0.5);
+    }
+
+    .typing-indicator {
+      display: none;
+      align-self: flex-start;
+      padding: 16px 20px;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 20px;
+      border-bottom-left-radius: 4px;
+    }
+
+    .dot {
+      display: inline-block;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #94a3b8;
+      margin: 0 2px;
+      animation: bounce 1.4s infinite ease-in-out both;
+    }
+
+    .dot:nth-child(1) { animation-delay: -0.32s; }
+    .dot:nth-child(2) { animation-delay: -0.16s; }
+
+    @keyframes bounce {
+      0%, 80%, 100% { transform: scale(0); }
+      40% { transform: scale(1); }
+    }
+
+    .data-details {
+      margin-top: 12px;
+      background: rgba(0,0,0,0.2);
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.05);
+      overflow: hidden;
+    }
+    .data-details summary {
+      padding: 12px 16px;
+      cursor: pointer;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #93c5fd;
+      user-select: none;
+      outline: none;
+      transition: background 0.2s;
+    }
+    .data-details summary:hover {
+      background: rgba(255,255,255,0.05);
+    }
+    .data-preview {
+      margin: 0;
+      font-size: 0.8rem;
+      background: rgba(0,0,0,0.4);
+      padding: 16px;
+      font-family: 'Menlo', 'Monaco', 'Courier New', monospace;
+      white-space: pre-wrap;
+      overflow-x: auto;
+      border-top: 1px solid rgba(255,255,255,0.05);
+      color: #e2e8f0;
+      max-height: 400px;
+    }
+    .next-page-btn {
+      margin-top: 12px;
+      display: inline-block;
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.2);
+      color: white;
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .next-page-btn:hover {
+      background: rgba(255,255,255,0.2);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="chat-container">
+    <div class="chat-header">
+      <h1>Neuron_AI_Chatbot</h1>
+    </div>
+
+    <div class="chat-messages" id="chat-messages">
+      <div class="message ai">
+        Hello! I map your questions to your JSON API. Configure the endpoint catalog in your host app, then ask in plain language.
+      </div>
+
+      <div class="typing-indicator" id="typing-indicator">
+        <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+      </div>
+    </div>
+
+    <form class="chat-input-container" id="chat-form">
+      <input type="text" id="chat-input" class="chat-input" placeholder="Ask me anything..." autocomplete="off">
+      <button type="submit" class="send-btn">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+      </button>
+    </form>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const form = document.getElementById('chat-form');
+      const input = document.getElementById('chat-input');
+      const messagesContainer = document.getElementById('chat-messages');
+      const typingIndicator = document.getElementById('typing-indicator');
+      const chatPostUrl = <%= chat_path.to_json.html_safe %>;
+
+      let conversationHistory = [];
+
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const userMessage = input.value.trim();
+        if (!userMessage) return;
+
+        appendMessage('user', userMessage);
+        input.value = '';
+
+        typingIndicator.style.display = 'block';
+        messagesContainer.appendChild(typingIndicator);
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+
+        let payloadText = "";
+        conversationHistory.forEach(msg => {
+          payloadText += `${msg.role === 'user' ? 'User' : 'AI'}: ${msg.content}\n`;
+        });
+        payloadText += `User: ${userMessage}`;
+
+        try {
+          const response = await fetch(chatPostUrl, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]')?.content || ''
+            },
+            body: JSON.stringify({ message: payloadText })
+          });
+
+          const result = await response.json();
+          typingIndicator.style.display = 'none';
+
+          if (result.success) {
+            appendMessage('ai', result.message, result.data, result);
+
+            conversationHistory.push({ role: 'user', content: userMessage });
+            conversationHistory.push({ role: 'ai', content: result.message });
+
+            if (conversationHistory.length > 10) {
+              conversationHistory = conversationHistory.slice(-10);
+            }
+          } else {
+            appendMessage('ai', 'Sorry, an error occurred processing that request.');
+          }
+        } catch (error) {
+          typingIndicator.style.display = 'none';
+          appendMessage('ai', 'Connection error. Check your server logs.');
+        }
+      });
+
+      function appendMessage(sender, text, data = null, resultObj = null) {
+        const msgDiv = document.createElement('div');
+        msgDiv.className = `message ${sender}`;
+        msgDiv.innerText = text;
+
+        if (data && Object.keys(data).length > 0 && typeof data !== 'number') {
+          let actualData = data;
+          let count = 0;
+
+          if (data.collection && Array.isArray(data.collection)) {
+            actualData = data.collection;
+            count = data.collection.length;
+          } else if (Array.isArray(data)) {
+            count = data.length;
+          } else if (typeof data === 'object' && data !== null) {
+            actualData = [data];
+            count = 1;
+          } else {
+            count = 1;
+          }
+
+          const details = document.createElement('details');
+          details.className = 'data-details';
+
+          const summary = document.createElement('summary');
+          summary.innerText = `View Data (${count} records)`;
+          details.appendChild(summary);
+
+          const pre = document.createElement('div');
+          pre.className = 'data-preview';
+          pre.innerText = JSON.stringify(actualData, null, 2);
+          details.appendChild(pre);
+
+          msgDiv.appendChild(details);
+        }
+
+        if (resultObj && resultObj.message && resultObj.message.includes('see the next page?')) {
+          const btn = document.createElement('button');
+          btn.className = 'next-page-btn';
+          btn.innerText = 'Fetch Next Page →';
+          btn.onclick = () => {
+            input.value = "next page";
+            form.dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
+          };
+          msgDiv.appendChild(btn);
+        }
+
+        if (resultObj && resultObj.debug) {
+          const debugDetails = document.createElement('details');
+          debugDetails.className = 'data-details';
+          debugDetails.style.marginTop = '8px';
+          debugDetails.style.borderColor = 'rgba(245, 158, 11, 0.3)';
+
+          const debugSummary = document.createElement('summary');
+          debugSummary.innerText = `[Debug] AI Output`;
+          debugSummary.style.color = '#f59e0b';
+          debugDetails.appendChild(debugSummary);
+
+          const debugPre = document.createElement('div');
+          debugPre.className = 'data-preview';
+          debugPre.style.color = '#fcd34d';
+          debugPre.innerText = JSON.stringify(resultObj.debug, null, 2);
+          debugDetails.appendChild(debugPre);
+
+          msgDiv.appendChild(debugDetails);
+        }
+
+        messagesContainer.insertBefore(msgDiv, typingIndicator);
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+      }
+    });
+  </script>
+</body>
+</html>
