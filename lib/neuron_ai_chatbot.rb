@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require "neuron_ai_chatbot/version"
-require "rails/engine"
 require "neuron_ai_chatbot/engine"
 
 module NeuronAiChatbot

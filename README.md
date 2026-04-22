@@ -1,7 +1,5 @@
 # neuron_ai_chatbot (Neuron_AI_Chatbot)
 
-[![CI](https://github.com/neuron-ai-chatbot/neuron_ai_chatbot/actions/workflows/ci.yml/badge.svg)](https://github.com/neuron-ai-chatbot/neuron_ai_chatbot/actions/workflows/ci.yml)
-
 Mountable **Rails::Engine** that turns natural language into **one JSON HTTP call** against *your* API, using **Ollama** as a structured router.
 
 | If you want… | Go to… |
@@ -60,4 +58,4 @@ MIT — see [MIT-LICENSE](MIT-LICENSE).
 
 ## Maintainer note
 
-Replace placeholder **GitHub** URLs in `neuron_ai_chatbot.gemspec` and the CI badge above before publishing your fork.
+Replace placeholder **GitHub** URLs in `neuron_ai_chatbot.gemspec` before publishing your fork.
