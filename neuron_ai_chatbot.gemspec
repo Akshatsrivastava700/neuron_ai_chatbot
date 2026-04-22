@@ -7,7 +7,7 @@ Gem::Specification.new do |spec|
   spec.name        = "neuron_ai_chatbot"
   spec.version     = NeuronAiChatbot::VERSION
   spec.authors     = ["Neuron AI Chatbot contributors"]
-  spec.email       = ["opensource@example.com"]
+  spec.email       = ["akshatsrivastava700@gmail.com"]
   spec.summary     = "Neuron_AI_Chatbot — mountable Rails engine for natural-language API routing via Ollama"
   spec.description = <<~DESC.strip
     Mountable Rails::Engine: plain-language chat → Ollama (JSON intent) → your HTTP JSON API.
