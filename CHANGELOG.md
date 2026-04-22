@@ -13,4 +13,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `NeuronAiChatbot::LocalAiService` (Ollama JSON intent), `ApiIntentValidator`, `ApiExecutor`, `ResponseProcessor`.
 - Configuration via `NeuronAiChatbot.setup` and environment variables, with lazy `ENV` reads so dotenv loads before first access.
 
-[0.1.0]: https://github.com/neuron-ai-chatbot/neuron_ai_chatbot/releases/tag/v0.1.0
+[0.1.0]: https://github.com/Akshatsrivastava700/neuron_ai_chatbot/releases/tag/v0.1.0

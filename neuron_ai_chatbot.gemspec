@@ -15,13 +15,13 @@ Gem::Specification.new do |spec|
     Configure api_knowledge, Ollama URL/model, and API executor credentials in the host app.
   DESC
   spec.license     = "MIT"
-  spec.homepage     = "https://github.com/neuron-ai-chatbot/neuron_ai_chatbot"
+  spec.homepage     = "https://github.com/Akshatsrivastava700/neuron_ai_chatbot"
 
   spec.metadata = {
-    "bug_tracker_uri"   => "https://github.com/neuron-ai-chatbot/neuron_ai_chatbot/issues",
-    "changelog_uri"     => "https://github.com/neuron-ai-chatbot/neuron_ai_chatbot/blob/main/CHANGELOG.md",
-    "documentation_uri" => "https://github.com/neuron-ai-chatbot/neuron_ai_chatbot#readme",
-    "source_code_uri"   => "https://github.com/neuron-ai-chatbot/neuron_ai_chatbot",
+    "bug_tracker_uri"   => "https://github.com/Akshatsrivastava700/neuron_ai_chatbot/issues",
+    "changelog_uri"     => "https://github.com/Akshatsrivastava700/neuron_ai_chatbot/blob/master/CHANGELOG.md",
+    "documentation_uri" => "https://github.com/Akshatsrivastava700/neuron_ai_chatbot#readme",
+    "source_code_uri"   => "https://github.com/Akshatsrivastava700/neuron_ai_chatbot",
     "rubygems_mfa_required" => "true"
   }
 
